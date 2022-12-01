@@ -6,14 +6,17 @@
 
 namespace ns3 {
 
-    class TcpOptimizer
-    {
-    public:
-        static void OptimizeBasic(Ptr<BasicSimulation> basicSimulation);
-        static void OptimizeUsingWorstCaseRtt(Ptr<BasicSimulation> basicSimulation, int64_t worst_case_rtt_ns);
-    private:
-        static void Generic();
-    };
+class TcpOptimizer {
+public:
+  static void OptimizeBasic(Ptr<BasicSimulation> basicSimulation);
+  static void OptimizeUsingWorstCaseRtt(Ptr<BasicSimulation> basicSimulation,
+                                        int64_t worst_case_rtt_ns);
+
+  static void Bbr();
+
+private:
+  static void Generic();
+};
 
 } // namespace ns3
 
