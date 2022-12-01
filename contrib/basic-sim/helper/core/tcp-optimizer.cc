@@ -144,6 +144,39 @@ void TcpOptimizer::OptimizeUsingWorstCaseRtt(
   basicSimulation->RegisterTimestamp("Setup TCP parameters");
 }
 
-void TcpOptimizer::Bbr() { std::cout << std::endl; }
+void TcpOptimizer::Bbr() {
+  // this is set via config
+  // Config::SetDefault("ns3::TcpL4Protocol::SocketType",
+  //                    StringValue("ns3::" + tcpTypeId));
+
+  Config::SetDefault("ns3::TcpSocket::SndBufSize", UintegerValue(4194304));
+  printf("  > Send buffer size........... %.3f MB\n", 4194304 / 1e6);
+
+  Config::SetDefault("ns3::TcpSocket::RcvBufSize", UintegerValue(6291456));
+  printf("  > Send buffer size........... %.3f MB\n", 6291456 / 1e6);
+
+  Config::SetDefault("ns3::TcpSocket::InitialCwnd", UintegerValue(10));
+  printf("  > Initial CWND............... %u packets\n", 10);
+
+  Config::SetDefault("ns3::TcpSocket::DelAckCount", UintegerValue(2));
+  printf("  > Delayed acknowledgement count ............... %u packets\n", 10);
+
+  Config::SetDefault("ns3::TcpSocket::SegmentSize", UintegerValue(1448));
+  printf("  > Segment size............... %" PRId64 " byte\n", 1448L);
+
+  // these settings are set in main
+  // we set them here:
+  // https://github.com/UA-ComputerNetworks/basic-sim/blob/358d28d8a9a87a64f1c94a31a71147891cfad1b9/model/core/topology-ptop-queue-selector-default.cc#L40
+  Config::SetDefault("ns3::DropTailQueue<Packet>::MaxSize",
+                     QueueSizeValue(QueueSize("1p")));
+
+  // idk what the default is.
+  // this does not seem to be set anywhere :(
+  std::string queueDisc = "FifoQueueDisc";
+  Config::SetDefault(queueDisc + "::MaxSize",
+                     QueueSizeValue(QueueSize("100p")));
+
+  std::cout << std::endl;
+}
 
 } // namespace ns3
